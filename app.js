@@ -15,7 +15,7 @@ form.addEventListener("submit", event => {
     event.preventDefault();
     p.innerHTML = ""
     console.log(email.value);
-    window.location=""
+    window.location="./home.html"
 
     createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {

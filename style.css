@@ -7,25 +7,37 @@ body{
     height: 100vh; 
     align-items: center;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(9, 172, 9);
 }
 #form{
     display: flex;
     justify-content: center;
-    background-color: white;
+    /* background-color: white; */
     width: 500px;
     height: 600px;
     border-radius: 20px;
+    background-color:transparent;
+    border: 2px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0  10px rgba(0,0,0,.2)
+}
+#form:hover{
+    border: 1px solid rgb(9, 172, 9);
 }
 input{
     
-    border: 1px solid rgb(0, 0, 0);
+    /* border: 1px solid rgb(0, 0, 0); */
     /* background-color: rgb(0, 0, 0); */
-    color: #000000;
+    color: white;
     width: 450px;
     height: 40px;
     border-radius: 10px;
     font-size: larger;
     cursor: pointer;
+    background-color:transparent;
+    border: 2px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0  10px rgba(0,0,0,.2)
 }
 input:hover{
     border:1px solid rgb(9, 172, 9);
@@ -35,7 +47,7 @@ a{
     /* padding-left: 100px; */
 }
 a:hover{
-    color: rgb(9, 172, 9);
+    color: rgb(255, 255, 255);
     cursor: pointer;
 }
 p{
@@ -57,13 +69,16 @@ h1{
     height: 40px;
     border-radius: 10px;
     border: none;
-    background-color: black;
+    background-color: rgb(9, 172, 9);
     color: white;
     font-size: larger;
     cursor: pointer;
 }
 #submit:hover{
-    background-color: rgb(9, 172, 9);
+    background-color:transparent;
+    border: 2px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0  10px rgba(0,0,0,.2)
 }
 label{
     font-size: large;
@@ -97,7 +112,7 @@ span{
     padding-bottom: 20px;
 }
 .p{
-    color: #000;
+    color: rgb(9, 172, 9);
 
 }
 h1:hover{
