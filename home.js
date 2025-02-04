@@ -1,48 +1,145 @@
-import {collection, addDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-import {db} from "./homeconfig.js";
-const form = document.querySelector("#form");
-const title = document.querySelector("#title");
-const description = document.querySelector("#description");
-const deletebtn = document.querySelector("#delete");
-const editbtn = document.querySelector("#edit");
-const div= document.querySelector(".main");
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+import { getFirestore, getDocs, doc,addDoc  ,collection,deleteDoc,getDoc,updateDoc} from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"; 
+// Ensure you're using "firebase-firestore.js" for Firestore functions
 
-// const p = document.querySelector("#error");
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBTeqWiaL854KXqyXixioy1nuBjx_v18o0",
+    authDomain: "social-project-29ea5.firebaseapp.com",
+    projectId: "social-project-29ea5",
+    storageBucket: "social-project-29ea5.firebasestorage.app",
+    messagingSenderId: "929013255817",
+    appId: "1:929013255817:web:2e8f044c5d6f9dfd3e0058",
+    measurementId: "G-VDTVMGQV93"
+};
 
- form.addEventListener("submit", async (event) => {
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+// console.log(db);
+
+const form = document.getElementById('userForm');
+let container = document.querySelector("#container")
+
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    let title = document.getElementById('title').value;
+  let description = document.getElementById('description').value;
 
-    console.log(title.value);
-    // console.log(description.value);
+   // to empty input filed function
 
-try {
-  const docRef = await addDoc(collection(db, "users"), {
-    title: title.value,
-    description: description.value,
+    function toEmptyinputFiled(){
+       title = document.querySelector("#title").value = '';
+       description = document.querySelector("#description").value = '';
+   };
+       // to add data from user click 
+    try {
+        const docRef = await addDoc(collection(db, "users"), {
+         title:title,
+         description:description
+        });
+        // console.log("Document written with ID: ", docRef.id);
+      
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      renderData()
+      container.innerHTML = `<p>Data Added Suceessfully</p>`
+       toEmptyinputFiled()
   });
-  div.innerHTML+=`<div class="child">
-  <span class="color">Item : </span> ${title.value}</br>
-  <span class="color">Description:</span>${description.value}</br>
-  <span class="color">Id:</span>${docRef.id}</br>
-  <button id="delete">Delete</button>
-    <button id="edit">Edit</button>
-</div></br>`
-  console.log("Document written with ID: ", docRef.id);
-} catch (e) {
-  console.log("Error adding document: ", e);
+
+
+
+  // render data on screen 
+
+ async function renderData(){
+   
+    try {
+
+
+     const docRef = await getDocs(collection(db,'users'));
+
+      let html = ""
+      let table = document.querySelector("table");
+
+     docRef.forEach(element => {
+         const userData = element.data();
+         const docid = element.id; // jese he data database sa aye ga os ke aik id hoge jise docId kha ta hi
+        //  console.log(globalArray);
+          html+= `
+          <tr>
+          <td>${userData.title}</td>
+          <td>${userData.description}</td>
+           <td> <button id="delbtn" onclick="deletMethod('${docid}')">Delete</button></td>
+           <td> <button id="delbtn" onclick="UpdatedtMethod('${docid}')">UPDate</button></td>
+           </tr>
+       `
+     });
+   
+     table.innerHTML = html
+      
+    } catch (error) {
+        console.log(error)
+    }
+     
+     
 }
-})
+
+// delet data 
+window.deletMethod = async function(docid){
+  container.innerHTML = ''
+
+  const docRef = doc(db,'users',docid);
+  await deleteDoc(docRef)
+  renderData()
+  container.innerHTML = `<p>Data Delet Suceessfully.</p>`
+
+}
+
+// updated data from form 
+window.UpdatedtMethod =  async function(id){
+   try {
+    const docRef = await  getDoc(doc(db,'users',id))
+    const currentUser = docRef.data();
+
+    console.log(currentUser) // object is return from db is obj ma title or desction hai ;
+
+      document.querySelector("#title").value = currentUser.title;
+      document.querySelector("#description").value =currentUser.description;
+
+      let sumbitbtn = document.querySelector('.sumbit');
+       let btn = document.querySelector(".updatedbtn");
+
+       btn.classList.add('show');
+      sumbitbtn.classList.add('hide');
+
+      btn.addEventListener('click', async()=>{
+          const newtilte = document.querySelector("#title").value;
+          const newdescription = document.querySelector("#description").value;
+
+          if(newtilte !== null && newdescription !== null){
+              await updateDoc(doc(db,'users',id),{
+                   title:newtilte,
+                   description:newdescription
+              });
+              
+              renderData()
+      container.innerHTML = ` <p>Data Updated  Suceessfully/<p>`
+
+              sumbitbtn.classList.remove('hide');
+              btn.classList.remove('show');
+
+          }
+          
+      })
+
+   } catch (error) {
+     console.log(error)
+   }
+}
 
 
-// editbtn.addEventListener("click",async(event)=>{
-//     event.preventDefault
- 
-
-
-//     const frankDocRef = doc(db, "users", "frank");
-// await updateDoc(frankDocRef, {
-//     "title": editprompt,
-// });
-
-// } )
-
+renderData()
